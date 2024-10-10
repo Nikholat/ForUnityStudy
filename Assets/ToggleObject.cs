@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class ToggleObject : MonoBehaviour, IInteractable
 {
-    private bool isActive = false;
-    public void Interact()
-    {
-        isActive = !isActive;
+    [SerializeField] private Animator animator;
+    private bool isWork;
+    public bool IsEnable => isWork;
 
-        if (isActive)
-        {
-         
-        }
-        else
-        {
-          
-        }
+    public void TurnOn()
+    {
+        isWork = true;
+        animator.SetBool("IsWork", isWork);
     }
+
+    public void TurnOff()
+    {
+        isWork = false;
+        animator.SetBool("IsWork", isWork);
+    }
+
 }

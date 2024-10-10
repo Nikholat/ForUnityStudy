@@ -4,5 +4,7 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    void Interact();
+    public bool IsEnable { get; }
+    public void TurnOn();
+    public void TurnOff();
 }
