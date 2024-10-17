@@ -5,9 +5,10 @@ using UnityEngine;
 public class PlayerJumpController : MonoBehaviour
 {
     [SerializeField] private float jumpForce = 2f;
+    [SerializeField] private Animator animator;
     private InputsController inputsController;
     private Rigidbody playerRigid;
-    private bool isJump = true;
+    private bool isGrounded = false;
 
     private void Awake()
     {
@@ -17,25 +18,36 @@ public class PlayerJumpController : MonoBehaviour
 
     void Update()
     {
-        Jump();
-    }
-
-    private void Jump()
-    {
-        if (isJump)
+        if (isGrounded && inputsController.IsSpaceKeyPressed())
         {
-            if (inputsController.IsSpaceKeyPressed())
-            {
-                StartCoroutine(Timer());
-                playerRigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            }
+            playerRigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
 
-    private IEnumerator Timer()
+
+    private void OnCollisionEnter(Collision collision)
     {
-        isJump = false;
-        yield return new WaitForSeconds(1.5f);
-        isJump = true;
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+            animator.SetBool("isJump", true);
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
+            animator.SetBool("isJump", false);
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+        }
     }
 }

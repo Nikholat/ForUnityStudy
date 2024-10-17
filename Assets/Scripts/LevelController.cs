@@ -5,15 +5,34 @@ using UnityEngine.SceneManagement;
 
 public class LevelController : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other) 
+    [SerializeField] ParticleSystem deathParticle;
+    [SerializeField] GameObject playerObject;
+    [SerializeField] GameObject Eyes;
+    private bool isDead = true;
+
+    private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("DeathTrigger"))
+        if (other.CompareTag("DeathTrigger"))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            if (isDead)
+            {
+                playerObject.SetActive(false);
+                Eyes.SetActive(false);
+                deathParticle.Play();
+                StartCoroutine(RestartLevel());
+            }
         }
-        if(other.CompareTag("Finish"))
+        if (other.CompareTag("Finish"))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
+    }
+
+    private IEnumerator RestartLevel()
+    {
+        isDead = false;
+        yield return new WaitForSeconds(1f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        isDead = true;
     }
 }

@@ -11,6 +11,7 @@ public class ThirdPersonCam : MonoBehaviour
     [SerializeField] private Transform playerObject;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private float rotationSpeed;
+    [SerializeField] private Transform eyes;
 
     private InputsController inputsController;
 
@@ -30,5 +31,9 @@ public class ThirdPersonCam : MonoBehaviour
 
         if(inputDir != Vector3.zero)
         playerObject.forward = Vector3.Slerp(playerObject.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
+
+        viewDir = player.position - new Vector3(transform.position.x, player.position.y, transform.position.z);
+
+        eyes.forward = viewDir.normalized;
     }
 }
